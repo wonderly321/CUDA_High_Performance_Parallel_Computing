@@ -21,6 +21,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stability", "stability\stab
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dd_ld_global", "dd_ld_global\dd_ld_global.vcxproj", "{5BE97960-3AAF-4C05-97A4-E3C2D19DD238}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dd_ld_shared", "dd_ld_shared\dd_ld_shared.vcxproj", "{2707E492-6C67-4028-9618-65E5E28B4097}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "heat_2d", "heat_2d\heat_2d.vcxproj", "{A003EE27-9D49-471F-87F8-ED6801FA9087}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -85,6 +89,18 @@ Global
 		{5BE97960-3AAF-4C05-97A4-E3C2D19DD238}.Release|x64.ActiveCfg = Release|x64
 		{5BE97960-3AAF-4C05-97A4-E3C2D19DD238}.Release|x64.Build.0 = Release|x64
 		{5BE97960-3AAF-4C05-97A4-E3C2D19DD238}.Release|x86.ActiveCfg = Release|x64
+		{2707E492-6C67-4028-9618-65E5E28B4097}.Debug|x64.ActiveCfg = Debug|x64
+		{2707E492-6C67-4028-9618-65E5E28B4097}.Debug|x64.Build.0 = Debug|x64
+		{2707E492-6C67-4028-9618-65E5E28B4097}.Debug|x86.ActiveCfg = Debug|x64
+		{2707E492-6C67-4028-9618-65E5E28B4097}.Release|x64.ActiveCfg = Release|x64
+		{2707E492-6C67-4028-9618-65E5E28B4097}.Release|x64.Build.0 = Release|x64
+		{2707E492-6C67-4028-9618-65E5E28B4097}.Release|x86.ActiveCfg = Release|x64
+		{A003EE27-9D49-471F-87F8-ED6801FA9087}.Debug|x64.ActiveCfg = Debug|x64
+		{A003EE27-9D49-471F-87F8-ED6801FA9087}.Debug|x64.Build.0 = Debug|x64
+		{A003EE27-9D49-471F-87F8-ED6801FA9087}.Debug|x86.ActiveCfg = Debug|x64
+		{A003EE27-9D49-471F-87F8-ED6801FA9087}.Release|x64.ActiveCfg = Release|x64
+		{A003EE27-9D49-471F-87F8-ED6801FA9087}.Release|x64.Build.0 = Release|x64
+		{A003EE27-9D49-471F-87F8-ED6801FA9087}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

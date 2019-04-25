@@ -1,13 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\dist_2d",
-    "\\dist_v1",
-    "\\dist_v1_cuda",
-    "\\dist_v2_cuda",
-    "\\dist_v2_cuda_unified",
-    "\\dis_v2",
-    "\\flashlight"
+    ""
   ],
+  "SelectedNode": "\\heat_2d",
   "PreviewInSolutionExplorer": false
 }
