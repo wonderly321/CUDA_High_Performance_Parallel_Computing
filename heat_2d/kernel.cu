@@ -44,12 +44,16 @@ __global__ void tempKernel(uchar4 *d_out, float *d_temp, int w, int h, BC bc) {
 	s_in[s_idx] = d_temp[idx];
 	//load halo cells
 	if (threadIdx.x < RAD) {
-		s_in[flatten(s_col - RAD, s_row, s_w, s_h)] = d_temp[flatten(col - RAD, row, w, h)];
-		s_in[flatten(s_col + blockDim.x, s_row, s_w, s_h)] = d_temp[flatten(col + blockDim.x, row, w, h)];
+		s_in[flatten(s_col - RAD, s_row, s_w, s_h)] = 
+			d_temp[flatten(col - RAD, row, w, h)];
+		s_in[flatten(s_col + blockDim.x, s_row, s_w, s_h)] = 
+			d_temp[flatten(col + blockDim.x, row, w, h)];
 	}
 	if (threadIdx.y < RAD) {
-		s_in[flatten(s_col, s_row - RAD, s_w, s_h)] = d_temp[flatten(col, row - RAD, w, h)];
-		s_in[flatten(s_col, s_row + blockDim.y, s_w, s_h)] = d_temp[flatten(col, row + blockDim.y, w, h)];
+		s_in[flatten(s_col, s_row - RAD, s_w, s_h)] = 
+			d_temp[flatten(col, row - RAD, w, h)];
+		s_in[flatten(s_col, s_row + blockDim.y, s_w, s_h)] =
+			d_temp[flatten(col, row + blockDim.y, w, h)];
 	}
 	//Calculate squared distance from pipe center
 	float dSq = ((col - bc.x)*(col - bc.x) + (row - bc.y)*(row - bc.y));
@@ -72,15 +76,15 @@ __global__ void tempKernel(uchar4 *d_out, float *d_temp, int w, int h, BC bc) {
 	__syncthreads();
 	//for all the remaining points,find temperature and set colors
 	float temp = 0.25f*(s_in[flatten(s_col - 1, s_row, s_w, s_h)] + 
-		s_in[flatten(s_col + 1, s_row, s_w, s_h)] + 
-		s_in[flatten(s_col, s_row - 1, s_w, s_h)] + 
-		s_in[flatten(s_col, s_row + 1, s_w, s_h)]);
+						s_in[flatten(s_col + 1, s_row, s_w, s_h)] + 
+						s_in[flatten(s_col, s_row - 1, s_w, s_h)] + 
+						s_in[flatten(s_col, s_row + 1, s_w, s_h)]);
 	d_temp[idx] = temp;
 	const unsigned char intensity = clip((int)temp);
-	d_out[idx].x = intensity;
-	d_out[idx].z = 255 - intensity;
+	d_out[idx].x = intensity;//higher temp ->more red
+	d_out[idx].z = 255 - intensity;//lower temp -> more blue
 }
-void kernelLauncher(uchar4 *d_out, float *d_temp, int w, int h,BC bc) {
+void kernelLauncher(uchar4 *d_out, float *d_temp, int w, int h, BC bc) {
 	const dim3 blockSize(TX, TY);
 	const dim3 gridSize(divUp(w, TX), divUp(h, TY));
 	const size_t smSz = (TX + 2 * RAD)*(TY + 2 * RAD) * sizeof(float);

@@ -16,7 +16,7 @@
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 #define ITERS_PER_RENDER 50
-
+//texture and pixel objects
 GLuint pbo = 0;
 GLuint tex = 0;
 struct cudaGraphicsResource *cuda_pbo_resource;

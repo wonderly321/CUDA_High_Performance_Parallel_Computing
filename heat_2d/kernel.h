@@ -1,8 +1,8 @@
-#pragma once
 #ifndef KERNEL_H
 #define KERNEL_H
 
 struct uchar4;
+//struct BC that contains all the boundary conditions
 typedef struct {
 	int x, y; //x and y location of pipe center
 	float rad; //radius of pipe

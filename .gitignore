@@ -1,6 +1,9 @@
 3rd/
 x64/
+.vs/
 
+*.db
+*.ipch
 # Prerequisites
 *.d
 

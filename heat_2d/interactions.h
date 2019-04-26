@@ -3,19 +3,17 @@
 #include "kernel.h"
 #include <cstdio>
 #include <cstdlib>
-#ifdef __APPLE__
-#else
+#ifndef __APPLE__
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #endif // __APPLE__
-
-#define MAX(x,y)((x)>(y))?(x):(y);
-#define W 640//图像维度
+#define MAX(x,y)(((x)>(y))?(x):(y));
+#define W 640
 #define H 640
-#define DT 1.0f//每按下箭头键参考点移动的距离（以像素为单位）
+#define DT 1.f//source intensity increment 1.0f is easier to read by human but the resultant is exactly the same.
 float *d_temp = 0;
 int iterationCount = 0;
-BC bc = { W / 2,H / 2,W / 10.f,150,212.f,70.f,0.f };
+BC bc = { W / 2, H / 2, W / 10.f, 150, 212.f, 70.f, 0.f };//boundary conds
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -26,18 +24,17 @@ void keyboard(unsigned char key, int x, int y)
 	if (key == 'G') bc.t_g += DT;
 	if (key == 'g') bc.t_g -= DT;
 	if (key == 'R') bc.rad += DT;
-	if (key == 'r') bc.rad -= DT;
+	if (key == 'r') bc.rad = MAX(0.f, bc.rad - DT);
 	if (key == 'C') ++bc.chamfer;
 	if (key == 'c') --bc.chamfer;
 	if (key == 'z') resetTemperature(d_temp, W, H, bc);
 	if (key == 27) exit(0);
-	glutPostRedisplay();//在每个回调函数的结尾被调用，根据交互输入计算出一个新的图像用于显示（调用main.cpp中的display()）
+	glutPostRedisplay();
 }
 
 void mouse(int button, int state, int x, int y)
 {
-	bc.x = x;
-	bc.y = y;
+	bc.x = x, bc.y = y;
 	glutPostRedisplay();
 }
 
