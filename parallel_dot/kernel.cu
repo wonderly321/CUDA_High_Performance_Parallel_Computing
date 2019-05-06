@@ -1,7 +1,7 @@
 #include "kernel.h"
 #include <cstdio>
 #define TPB 64
-#define ATOMIC 1 // 0 for non-atomic addition
+#define ATOMIC 0 // 0 for non-atomic addition
 
 __global__ void dotKernel(int *d_res, const int *d_a, const int *d_b, int n) {
 	const int idx = threadIdx.x + blockDim.x*blockIdx.x;

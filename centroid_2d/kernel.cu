@@ -3,8 +3,7 @@
 #include <helper_math.h>
 #define TPB 512
 
-__global__ void centroidKernel(const uchar4 *d_img, int *d_centroidCol,
-	int *d_centroidRow, int *d_pixelCount, int width, int height) {
+__global__ void centroidKernel(const uchar4 *d_img, int *d_centroidCol,int *d_centroidRow, int *d_pixelCount, int width, int height) {
 	__shared__ uint4 s_img[TPB];
 
 	const int idx = threadIdx.x + blockDim.x*blockIdx.x;
@@ -57,8 +56,8 @@ void centroidParallel(uchar4 *img, int width, int height) {
 	cudaMemset(d_centroidCol, 0, sizeof(int));
 	cudaMemset(d_pixelCount, 0, sizeof(int));
 
-	centroidKernel << <(width*height + TPB - 1)/ TPB, TPB >> > (d_img, 
-		d_centroidCol, d_centroidRow, d_pixelCount, width, height);
+	centroidKernel << <(width*height + TPB - 1)/ TPB, TPB >> > (d_img, d_centroidCol, d_centroidRow, d_pixelCount, width, height);
+
 	//Copy results from device to host
 	cudaMemcpy(&centroidRow, &d_centroidRow, sizeof(int), cudaMemcpyDeviceToHost);
 	cudaMemcpy(&centroidCol, &d_centroidCol, sizeof(int), cudaMemcpyDeviceToHost);

@@ -79,9 +79,9 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CudaCompile Include="kernel_v1.cu" />
+    <CudaCompile Include="kernel_v2.cu" />
     <CudaCompile Include="kernel.cu" />
-    <CudaCompile Include="kernel_sin.cu" />
-    <CudaCompile Include="kernel_sin_sout.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

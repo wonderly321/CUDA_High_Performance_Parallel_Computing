@@ -7,8 +7,8 @@ using namespace cimg_library;
 
 int main() {
 	//Initializing input and output images
-	CImg<unsigned char> inImage("wa_state.bmp");
-	CImg<unsigned char>outImage(inImage, "xyzc", 0);
+	CImg<unsigned char> inImage("39.bmp");
+	CImg<unsigned char> outImage(inImage, "xyzc", 0);
 	int width = inImage.width();
 	int height = inImage.height();
 
@@ -35,7 +35,6 @@ int main() {
 		}
 	}
 
-	outImage.save("wa_state_out.bmp");
+	outImage.save("39_ct.bmp");
 	free(imgArray);
-	return 0;
 }

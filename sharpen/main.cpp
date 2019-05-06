@@ -11,7 +11,7 @@ using namespace std;
 using namespace cimg_library;
 int main() {
 	//cimg_library::CImg<unsigned char> image("39.bmp");//as input & output  ???
-	CImg<unsigned char> image("39.bmp");
+	CImg<unsigned char> image("33.bmp");
 	const int w = image.width();
 	const int h = image.height();
 
@@ -35,7 +35,7 @@ int main() {
 			image(c, r, 2) = arr[r*w + c].z;			
 		}
 	}
-	image.save_bmp("out.bmp");
+	image.save_bmp("33s.bmp");
 	free(arr);
 	return 0;
 }
