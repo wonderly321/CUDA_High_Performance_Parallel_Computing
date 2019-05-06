@@ -15,10 +15,9 @@ int main() {
 		x[i] = i*h;
 		u[i] = sinf(x[i]);
 	}
-	for (int i = 1; i < N - 1; i++) {
-		printf("%f\n", u[i + 1] + u[i - 1] - 2 * u[i]);
-	}
+	
 	ddParallel(result_parallel, u, N, h);
+	//printf("%f",result_parallel[0]);
 	FILE *outfile = fopen("dd_ld_global_results.csv", "w");
 	for (int i = 1; i < N-1; ++i) {
 		fprintf(outfile, "%f,%f,%f,%f\n", x[i], u[i], result_parallel[i], result_parallel[i] + u[i]);

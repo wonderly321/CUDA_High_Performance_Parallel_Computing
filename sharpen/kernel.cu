@@ -17,11 +17,12 @@ __device__ int flatten(int col, int row, int width, int height) {
 __global__ void sharpenKernel(uchar4 *d_out, const uchar4 *d_in, const float *d_filter, int w, int h) {
 	const int c = threadIdx.x + blockDim.x*blockIdx.x;
 	const int r = threadIdx.y + blockDim.y*blockIdx.y;
-	if ((c >= w) || (r <= h)) return;
+	if ((c >= w) || (r >= h)) return;
 	const int i = flatten(c, r, w, h);
 	const int fltSz = 2 * RAD + 1;
-	float rgb[3] = { 0.f,0.f,0.f };
+	float rgb[3] = { 0.f, 0.f, 0.f };
 	
+	//for loop RAD
 	for (int rd = -RAD; rd <= RAD; rd++) {
 		for (int cd = -RAD; cd <= RAD; cd++) {
 			int imgIdx = flatten(c + cd, r + rd, w, h);
@@ -57,6 +58,7 @@ void sharpenParallel(uchar4 *arr, int w, int h) {
 	const dim3 gridSize(divUp(w, blockSize.x), divUp(h, blockSize.y));
 
 	sharpenKernel << <gridSize, blockSize >> > (d_out, d_in, d_filter, w, h);
+
 	cudaMemcpy(arr, d_out, w*h * sizeof(uchar4), cudaMemcpyDeviceToHost);
 	cudaFree(d_in);
 	cudaFree(d_out);

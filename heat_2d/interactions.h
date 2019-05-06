@@ -7,10 +7,10 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #endif // __APPLE__
-#define MAX(x,y)(((x)>(y))?(x):(y));
+#define MAX(x,y)(((x)>(y))?(x):(y))
 #define W 640
 #define H 640
-#define DT 1.f//source intensity increment 1.0f is easier to read by human but the resultant is exactly the same.
+#define DT 1.f //source intensity increment 1.0f is easier to read by human but the resultant is exactly the same.
 float *d_temp = 0;
 int iterationCount = 0;
 BC bc = { W / 2, H / 2, W / 10.f, 150, 212.f, 70.f, 0.f };//boundary conds

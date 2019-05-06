@@ -4,7 +4,7 @@
 __global__ void ddKernel(float *d_out, const float *d_in, int size, float h) {
 	const int i = threadIdx.x + blockDim.x * blockIdx.x;
 	if (i >= size) return;
-
+	if (i == 0) return;
 	const int s_idx = threadIdx.x + RAD;
 	extern __shared__ float s_in[];
 

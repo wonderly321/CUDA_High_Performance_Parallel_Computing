@@ -4,10 +4,8 @@
 __global__ void ddKernel(float *d_out, const float *d_in, int size, float h) {
 	const int i = threadIdx.x + blockDim.x * blockIdx.x;
 	if (i >= size) return;
-	//sin 二阶导数有限差分
-	float a1 = (d_in[i + 1] - d_in[i]) / (h);
-	float a2 = (d_in[i] - d_in[i - 1]) / (h);
-	d_out[i] = a1 ;
+	if (i <= 0) return;
+	d_out[i] = (d_in[i + 1] + d_in[i - 1] - 2.0f*d_in[i]) / (h*h);
 }
 
 void ddParallel(float *out, const float *in, int n, float h) {
