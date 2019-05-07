@@ -6,21 +6,20 @@
 __global__ void centroidKernel(const uchar4 *d_img, int *d_centroidCol,int *d_centroidRow, int *d_pixelCount, int width, int height) {
 	__shared__ uint4 s_img[TPB];
 
-	const int idx = threadIdx.x + blockDim.x*blockIdx.x;
+	const int idx = threadIdx.x + blockDim.x * blockIdx.x;
 	const int s_idx = threadIdx.x;
 	const int row = idx / width;
 	const int col = idx - row * width;
 
-	if ((d_img[idx].x < 255 || d_img[idx].y < 255 ||
-		d_img[idx].z < 255) && (idx < width*height)){
+	if ((d_img[idx].x < 255 || d_img[idx].y < 255 || d_img[idx].z < 255) && (idx < width*height)){
 		s_img[s_idx].x = col;
 		s_img[s_idx].y = row;
 		s_img[s_idx].z = 1;
 	}
 	else {
 		s_img[s_idx].x = 0;
-		s_img[s_idx].x = 0;
-		s_img[s_idx].x = 0;
+		s_img[s_idx].y = 0;
+		s_img[s_idx].z = 0;
 	}
 	__syncthreads();
 	
@@ -28,6 +27,7 @@ __global__ void centroidKernel(const uchar4 *d_img, int *d_centroidCol,int *d_ce
 	for (int s = blockDim.x / 2; s > 0; s >>= 1) {
 		if (s_idx < s) {
 			s_img[s_idx] += s_img[s_idx + s];
+			//printf(s_img[s_idx].z);
 		}
 		__syncthreads();
 	}
@@ -36,6 +36,7 @@ __global__ void centroidKernel(const uchar4 *d_img, int *d_centroidCol,int *d_ce
 		atomicAdd(d_centroidCol, s_img[0].x);
 		atomicAdd(d_centroidRow, s_img[0].y);
 		atomicAdd(d_pixelCount, s_img[0].z);
+		//printf(d_pixelCount);
 	}
 }
 
@@ -47,10 +48,10 @@ void centroidParallel(uchar4 *img, int width, int height) {
 	//Allocate memory for device array and copy from host
 	cudaMalloc(&d_img, width*height * sizeof(uchar4));
 	cudaMemcpy(d_img, img, width*height * sizeof(uchar4), cudaMemcpyHostToDevice);
-
 	//Allocate and set memory for three integers on the device
 	cudaMalloc(&d_centroidRow, sizeof(int));
 	cudaMalloc(&d_centroidCol, sizeof(int));
+
 	cudaMalloc(&d_pixelCount, sizeof(int));
 	cudaMemset(d_centroidRow, 0, sizeof(int));
 	cudaMemset(d_centroidCol, 0, sizeof(int));
@@ -59,10 +60,10 @@ void centroidParallel(uchar4 *img, int width, int height) {
 	centroidKernel << <(width*height + TPB - 1)/ TPB, TPB >> > (d_img, d_centroidCol, d_centroidRow, d_pixelCount, width, height);
 
 	//Copy results from device to host
-	cudaMemcpy(&centroidRow, &d_centroidRow, sizeof(int), cudaMemcpyDeviceToHost);
-	cudaMemcpy(&centroidCol, &d_centroidCol, sizeof(int), cudaMemcpyDeviceToHost);
-	cudaMemcpy(&pixelCount, &d_pixelCount, sizeof(int), cudaMemcpyDeviceToHost);
-
+	cudaMemcpy(&centroidRow, d_centroidRow, sizeof(int), cudaMemcpyDeviceToHost);
+	cudaMemcpy(&centroidCol, d_centroidCol, sizeof(int), cudaMemcpyDeviceToHost);
+	cudaMemcpy(&pixelCount, d_pixelCount, sizeof(int), cudaMemcpyDeviceToHost);
+	//printf("ssssssss%d",pixelCount);
 	centroidRow /= pixelCount;
 	centroidCol /= pixelCount;
 

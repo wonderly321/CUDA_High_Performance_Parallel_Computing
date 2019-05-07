@@ -31,6 +31,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "parallel_dot", "parallel_do
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "centroid_2d", "centroid_2d\centroid_2d.vcxproj", "{CF78C063-E6BF-49A5-8C31-F7F2C37252F6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dist_3d", "dist_3d\dist_3d.vcxproj", "{759BD57F-C5D1-413A-A4B7-3D07A0B63952}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vis_3d", "vis_3d\vis_3d.vcxproj", "{07A88AF1-FE77-4819-9C1E-44CC50F0BD28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -125,6 +129,18 @@ Global
 		{CF78C063-E6BF-49A5-8C31-F7F2C37252F6}.Release|x64.ActiveCfg = Release|x64
 		{CF78C063-E6BF-49A5-8C31-F7F2C37252F6}.Release|x64.Build.0 = Release|x64
 		{CF78C063-E6BF-49A5-8C31-F7F2C37252F6}.Release|x86.ActiveCfg = Release|x64
+		{759BD57F-C5D1-413A-A4B7-3D07A0B63952}.Debug|x64.ActiveCfg = Debug|x64
+		{759BD57F-C5D1-413A-A4B7-3D07A0B63952}.Debug|x64.Build.0 = Debug|x64
+		{759BD57F-C5D1-413A-A4B7-3D07A0B63952}.Debug|x86.ActiveCfg = Debug|x64
+		{759BD57F-C5D1-413A-A4B7-3D07A0B63952}.Release|x64.ActiveCfg = Release|x64
+		{759BD57F-C5D1-413A-A4B7-3D07A0B63952}.Release|x64.Build.0 = Release|x64
+		{759BD57F-C5D1-413A-A4B7-3D07A0B63952}.Release|x86.ActiveCfg = Release|x64
+		{07A88AF1-FE77-4819-9C1E-44CC50F0BD28}.Debug|x64.ActiveCfg = Debug|x64
+		{07A88AF1-FE77-4819-9C1E-44CC50F0BD28}.Debug|x64.Build.0 = Debug|x64
+		{07A88AF1-FE77-4819-9C1E-44CC50F0BD28}.Debug|x86.ActiveCfg = Debug|x64
+		{07A88AF1-FE77-4819-9C1E-44CC50F0BD28}.Release|x64.ActiveCfg = Release|x64
+		{07A88AF1-FE77-4819-9C1E-44CC50F0BD28}.Release|x64.Build.0 = Release|x64
+		{07A88AF1-FE77-4819-9C1E-44CC50F0BD28}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
