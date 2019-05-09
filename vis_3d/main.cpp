@@ -7,28 +7,25 @@
 #define NOMINMAX
 #include <Windows.h>
 #endif // _WIN32
-#ifdef __APPLE__
-#else 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-#endif // __APPLE__
 
 #include <cuda_runtime.h>
 #include <cuda_gl_interop.h>
 
-//texture and pixel objects
-GLuint pbo = 0;
-GLuint tex = 0;
+//texture and pixel objects5
+GLuint pbo = 0; //OpenGL pixel buffer object
+GLuint tex = 0; //OpenGL texture object
 struct cudaGraphicsResource *cuda_pbo_resource;
 
 void render() {
 	uchar4 *d_out = 0;
 	cudaGraphicsMapResources(1, &cuda_pbo_resource, 0);
 	cudaGraphicsResourceGetMappedPointer((void **)&d_out, NULL, cuda_pbo_resource);
-	kernelLauncher(d_out, d_vol, W, H, loc,volumeSize, method, zs, theta,threshold, dist);
+	kernelLauncher(d_out, d_vol, W, H, volumeSize, method, zs, theta, threshold, dist);
 	cudaGraphicsUnmapResources(1, &cuda_pbo_resource, 0);
 	char title[128];
-	sprintf(title, "Volume Visualizer : objId=%d, method = %d, ""dist = %.1f,theta = %.1f", id, method, dist, theta);
+	sprintf(title, "Volume Visualizer : objId = %d, method = %d, ""  dist = %.1f, theta = %.1f", id, method, dist, theta);
 	glutSetWindowTitle(title);
 }
 
@@ -52,7 +49,7 @@ void initGLUT(int *argc, char **argv) {
 	glutInit(argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 	glutInitWindowSize(W, H);
-	glutCreateWindow(TITLE_STRING);
+	glutCreateWindow("Volume Visualizer");
 #ifndef __APPLE__
 	glewInit();
 #endif // !__APPLE__
@@ -61,14 +58,13 @@ void initGLUT(int *argc, char **argv) {
 void initPixelBuffer() {
 	glGenBuffers(1, &pbo);
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
-	glBufferData(GL_PIXEL_UNPACK_BUFFER, 4 * W*H * sizeof(GLubyte), 0, GL_STREAM_DRAW);
+	glBufferData(GL_PIXEL_UNPACK_BUFFER, W*H * sizeof(GLubyte) * 4, 0, GL_STREAM_DRAW);
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	cudaGraphicsGLRegisterBuffer(&cuda_pbo_resource, pbo, cudaGraphicsMapFlagsWriteDiscard);
-
-
 }
+
 void exitfunc() {
 	if (pbo) {
 		cudaGraphicsUnregisterResource(cuda_pbo_resource);
@@ -78,7 +74,7 @@ void exitfunc() {
 	cudaFree(d_vol);
 }
 int main(int argc, char** argv) {
-	cudaMalloc(&d_vol, NX*NY*NZ * sizeof(float));
+	cudaMalloc(&d_vol, NX*NY*NZ * sizeof(float)); //3D volume data
 	volumeKernelLauncher(d_vol, volumeSize, id, params);
 	printInstructions();
 	initGLUT(&argc, argv);
@@ -92,4 +88,3 @@ int main(int argc, char** argv) {
 	atexit(exitfunc);
 	return 0;
 }
-

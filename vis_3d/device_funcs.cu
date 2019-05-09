@@ -1,35 +1,39 @@
 #include "device_funcs.cuh"
 #include <helper_math.h>
-#define EPS 0.01F
+#define EPS 0.01f
 
 __host__ int divUp(int a, int b) { return(a + b - 1) / b; }
+
 __device__ unsigned char clip(int n) { return n > 255 ? 255 : (n < 0 ? 0 : n); }
+
 __device__ int clipWithBounds(int n, int n_min, int n_max) {
 	return n > n_max ? n_max : (n < n_min ? n_min : n);
 }
-__device__ float3 yRotate(float3 pos, float theta){
+
+__device__ float3 yRotate(float3 pos, float theta) {
 	const float c = cosf(theta), s = sinf(theta);
-	return make_float3(c*pos.x+s*pos.z,pos.y-s*pos.x,-s*pos.x+c*pos.z);
+	return make_float3(c * pos.x + s * pos.z, pos.y, -s * pos.x + c * pos.z);
 }
+
 __device__ float func(int c, int r, int s, int id, int3 volSize, float4 params)
 {
-	const int3 pos0 = { volSize.x / 2,volSize.y / 2,volSize.z / 2 };
+	const int3 pos0 = { volSize.x / 2, volSize.y / 2, volSize.z / 2 };
 	const float dx = c - pos0.x, dy = r - pos0.y, dz = s - pos0.z;
 	//sphere
 	if (id == 0) {
-		return sqrtf(dx*dx + dy * dy + dz * dz) - params.x;
+		return sqrtf(dx * dx + dy * dy + dz * dz) - params.x;
 	}
 	else if (id == 1) {
-		const float r = sqrtf(dx*dx + dy * dy);
+		const float r = sqrtf(dx * dx + dy * dy);
 		return sqrtf((r - params.x)*(r - params.x) + dz * dz) - params.y;
 	}
 	else {
 		float x = fabsf(dx) - params.x, y = fabsf(dy) - params.y, z = fabsf(dz) - params.z;
-		if (x <= 0 && y <= 0 && z <= 0) 
+		if (x <= 0 && y <= 0 && z <= 0)
 			return fmaxf(x, fmaxf(y, z));
 		else {
 			x = fmaxf(x, 0), y = fmaxf(y, 0), z = fmaxf(z, 0);
-			return sqrtf(x*x + y * y + z * z);
+			return sqrtf(x * x + y * y + z * z);
 		}
 	}
 }
@@ -40,12 +44,12 @@ __device__ float3 scrIdxToPos(int c, int r, int w, int h, float zs)
 }
 __device__ float3 paramRay(Ray r, float t)
 {
-	return r.o+t*(r.d);
+	return r.o + t * (r.d);
 }
 __device__ float planeSDF(float3 pos, float3 norm, float d) {
 	return dot(pos, normalize(norm)) - d;
 }
-__device__ bool rayPlaneIntersect(Ray myRay, float3 n, float dist,float *t) {
+__device__ bool rayPlaneIntersect(Ray myRay, float3 n, float dist, float *t) {
 	const float f0 = planeSDF(paramRay(myRay, 0.f), n, dist);
 	const float f1 = planeSDF(paramRay(myRay, 1.f), n, dist);
 	bool result = (f0*f1 < 0);
@@ -96,7 +100,7 @@ __device__ float density(float *d_vol, int3 volSize, float3 pos) {
 		(1 - rem.x)*(1 - rem.y)*(rem.z)*dens001 +
 		(rem.x)*(rem.y)*(1 - rem.z)*dens110 +
 		(1 - rem.x)*(rem.y)*(rem.z)*dens011 +
-		(rem.x)*(rem.y)*(1 - rem.z)*dens110 +
+		(rem.x)*(rem.y)*(1 - rem.z)*dens101 +
 		(rem.x)*(rem.y)*(rem.z)*dens111;
 }
 __device__ uchar4 sliceShader(float *d_vol, int3 volSize, Ray boxRay, float gain, float dist, float3 norm)
@@ -119,7 +123,7 @@ __device__ uchar4 volumeRenderShader(float * d_vol, int3 volSize, Ray boxRay, fl
 	float3 pos = boxRay.o;
 	float val = density(d_vol, volSize, pos);
 	for (float t = 0.f; t < 1.f; t += dt) {
-		if (val - threshold < 0.f) 
+		if (val - threshold < 0.f)
 			accum += (fabsf(val - threshold))*len;
 		pos = paramRay(boxRay, t);
 		val = density(d_vol, volSize, pos);
@@ -143,9 +147,9 @@ __device__ uchar4 rayCastShader(float * d_vol, int3 volSize, Ray boxRay, float d
 	}
 	if (t < 1.f) {
 		const float3 ux = make_float3(1, 0, 0), uy = make_float3(0, 1, 0), uz = make_float3(0, 0, 1);
-		float3 grad = { (density(d_vol,volSize,pos + EPS * ux) - density(d_vol,volSize,pos + EPS)) / EPS,
-			(density(d_vol,volSize,pos + EPS * uy) - density(d_vol,volSize,pos + EPS)) / EPS,
-			(density(d_vol,volSize,pos + EPS * uz) - density(d_vol,volSize,pos + EPS)) / EPS };
+		float3 grad = { (density(d_vol, volSize, pos + EPS * ux) - density(d_vol, volSize, pos)) / EPS,
+			(density(d_vol,volSize,pos + EPS * uy) - density(d_vol,volSize,pos)) / EPS,
+			(density(d_vol,volSize,pos + EPS * uz) - density(d_vol,volSize,pos)) / EPS };
 		float intensity = -dot(normalize(boxRay.d), normalize(grad));
 		shade = make_uchar4(255 * intensity, 0, 0, 255);
 	}
